@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Send, HelpCircle } from "lucide-react";
+import { submitRotationReview } from "./api/rotationApi";
 
 const RotationForm = () => {
   const [formData, setFormData] = useState({
@@ -74,33 +75,25 @@ const RotationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/rotations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      await submitRotationReview(formData);
+      alert("Rotation site submitted successfully!");
+      setFormData({
+        hospitalName: "",
+        city: "",
+        state: "",
+        specialty: "",
+        startDate: "",
+        lengthWeeks: "",
+        teamMembers: "",
+        review: {
+          rating: 0,
+          pros: "",
+          cons: "",
+          avgHours: "",
+          teaching: 0,
+          supervision: 0,
         },
-        body: JSON.stringify(formData),
       });
-      if (response.ok) {
-        alert("Rotation site submitted successfully!");
-        setFormData({
-          hospitalName: "",
-          city: "",
-          state: "",
-          specialty: "",
-          startDate: "",
-          lengthWeeks: "",
-          teamMembers: "",
-          review: {
-            rating: 0,
-            pros: "",
-            cons: "",
-            avgHours: "",
-            teaching: 0,
-            supervision: 0,
-          },
-        });
-      }
     } catch (error) {
       console.error("Error submitting rotation:", error);
       alert("Error submitting rotation. Please try again.");

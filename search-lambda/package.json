@@ -1,0 +1,15 @@
+{
+  "name": "rotation-review-api",
+  "version": "1.0.0",
+  "description": "API for medical student rotation reviews",
+  "dependencies": {
+    "aws-sdk": "^2.1234.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}

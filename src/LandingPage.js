@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Search, BookOpen, Users, Trophy } from "lucide-react";
+import RotationSearchTable from "./RotationSearchTable";
 
 const LandingPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const tableRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Implement search logic/navigation
+
+    // Scroll to table
+    tableRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    // // Update the search input in the table component
+    // if (searchInputRef.current) {
+    //   const event = new Event("input", { bubbles: true });
+    //   searchInputRef.current.value = searchQuery;
+    //   searchInputRef.current.dispatchEvent(event);
+    // }
   };
 
   return (
@@ -33,7 +45,7 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section with Search */}
       <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-20">
         <div className="max-w-4xl mx-auto text-center px-4">
           <h1 className="text-4xl font-bold mb-6">
@@ -99,6 +111,11 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Table Section - Now passing the searchQuery prop */}
+      <div ref={tableRef} className="pb-16">
+        <RotationSearchTable initialSearchTerm={searchQuery} />
       </div>
     </div>
   );
