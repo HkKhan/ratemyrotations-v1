@@ -18,6 +18,7 @@ export const searchRotations = async (query) => {
 };
 
 export const submitRotationReview = async (formData) => {
+  console.log("formdata", formData);
   const response = await fetch(`${config.apiBaseUrl}/submit-review`, {
     // Changed from /rotations
     method: "POST",

@@ -1,5 +1,5 @@
 exports.TABLE_NAMES = {
-  ROTATION_SITES: "RotationSites",
+  ROTATION_SITES: "rotation-sites",
   REVIEWS: "Reviews",
 };
 

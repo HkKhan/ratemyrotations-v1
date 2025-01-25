@@ -3,7 +3,7 @@ import "./App.css";
 import LandingPage from "./LandingPage"; // Import your component
 import RotationForm from "./RotationForm"; // Import your component
 import SearchResults from "./SearchResults";
-import RotationDetail from "./RotationDetail";
+import RotationDetails from "./RotationDetails";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/add" element={<RotationForm />} />
           <Route path="/search" element={<SearchResults />} />
-          <Route path="/rotation/:siteId" element={<RotationDetail />} />
+          <Route path="/rotation/:siteId" element={<RotationDetails />} />
         </Routes>
       </div>
     </Router>

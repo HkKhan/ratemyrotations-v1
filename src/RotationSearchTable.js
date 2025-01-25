@@ -16,11 +16,22 @@ const RotationSearchTable = ({ initialSearchTerm = "" }) => {
   useEffect(() => {
     const fetchRotations = async () => {
       try {
+        // Modified to fetch all rotations by using an empty query
         const response = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/search?q=`
+          `${process.env.REACT_APP_API_BASE_URL}/search`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
         const data = await response.json();
-        setRotations(data);
+        setRotations(data.items || []); // Adjust based on your API response structure
         setLoading(false);
       } catch (error) {
         console.error("Error fetching rotations:", error);
@@ -62,8 +73,8 @@ const RotationSearchTable = ({ initialSearchTerm = "" }) => {
     const searchFields = [
       rotation.hospitalName,
       rotation.specialty,
-      rotation.city,
-      rotation.state,
+      rotation.location.city,
+      rotation.location.state,
     ].map((field) => String(field).toLowerCase());
 
     return searchFields.some((field) =>
@@ -132,13 +143,13 @@ const RotationSearchTable = ({ initialSearchTerm = "" }) => {
                 </th>
                 <th
                   className="py-4 px-6 text-left cursor-pointer group border-b border-gray-200"
-                  onClick={() => requestSort("avgHours")}
+                  onClick={() => requestSort("location.city")}
                 >
                   <div className="flex items-center space-x-1">
                     <span className="font-medium text-sm text-gray-600">
-                      Hours/Week
+                      Location
                     </span>
-                    {getSortIcon("avgHours")}
+                    {getSortIcon("location.city")}
                   </div>
                 </th>
                 <th
@@ -152,12 +163,23 @@ const RotationSearchTable = ({ initialSearchTerm = "" }) => {
                     {getSortIcon("averageRating")}
                   </div>
                 </th>
+                <th
+                  className="py-4 px-6 text-left cursor-pointer group border-b border-gray-200"
+                  onClick={() => requestSort("totalReviews")}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span className="font-medium text-sm text-gray-600">
+                      Reviews
+                    </span>
+                    {getSortIcon("totalReviews")}
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {loading ? (
                 <tr>
-                  <td colSpan="4" className="text-center py-8">
+                  <td colSpan="5" className="text-center py-8">
                     Loading...
                   </td>
                 </tr>
@@ -171,19 +193,13 @@ const RotationSearchTable = ({ initialSearchTerm = "" }) => {
                       <div className="font-medium text-blue-600 hover:text-blue-800">
                         {rotation.hospitalName}
                       </div>
-                      <div className="text-sm text-gray-500 mt-1">
-                        {rotation.city}, {rotation.state}
-                      </div>
                     </td>
                     <td className="py-4 px-6">
                       <div className="text-gray-900">{rotation.specialty}</div>
                     </td>
                     <td className="py-4 px-6">
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-900">
-                          {rotation.avgHours}
-                        </span>
+                      <div className="text-sm text-gray-500">
+                        {rotation.location.city}, {rotation.location.state}
                       </div>
                     </td>
                     <td className="py-4 px-6">
@@ -192,6 +208,11 @@ const RotationSearchTable = ({ initialSearchTerm = "" }) => {
                         <span className="font-medium text-gray-900">
                           {rotation.averageRating.toFixed(1)}
                         </span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="text-gray-900">
+                        {rotation.totalReviews}
                       </div>
                     </td>
                   </tr>
