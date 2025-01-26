@@ -15,8 +15,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "./components/ui/popover";
+import hospitalData from "./public/deduplicated_hospitals_interactive.csv";
 
-// Debounce utility function
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -32,26 +32,23 @@ function debounce(func, wait) {
 export function HospitalNameAutocomplete({
   formData,
   setFormData,
-  csvPath = "/deduplicated_hospitals_interactive.csv",
+  placeholder = "Search by hospital name...",
 }) {
   const [open, setOpen] = useState(false);
   const [hospitals, setHospitals] = useState([]);
   const [filteredHospitals, setFilteredHospitals] = useState([]);
 
-  // Load hospitals from CSV on component mount
   useEffect(() => {
     async function loadHospitals() {
       try {
-        const response = await fetch(csvPath);
+        const response = await fetch(hospitalData);
         const csvText = await response.text();
-        console.log("text", csvText);
 
-        // Basic CSV parsing
-        const rows = csvText.split("\n").slice(1); // Skip header
+        const rows = csvText.split("\n").slice(1);
         const uniqueHospitals = [
           ...new Set(
             rows
-              .map((row) => row.split(",")[3]?.trim()) // Hospital name is 4th column
+              .map((row) => row.split(",")[3]?.trim())
               .filter((name) => name && name.length > 0)
           ),
         ];
@@ -63,9 +60,8 @@ export function HospitalNameAutocomplete({
     }
 
     loadHospitals();
-  }, [csvPath]);
+  }, []);
 
-  // Debounced filter function
   const debouncedFilterHospitals = useCallback(
     debounce((value) => {
       if (!value) {
@@ -77,76 +73,74 @@ export function HospitalNameAutocomplete({
         .filter((hospital) =>
           hospital.toLowerCase().includes(value.toLowerCase())
         )
-        .slice(0, 50); // Limit to first 50 results
+        .slice(0, 50);
 
       setFilteredHospitals(filtered);
     }, 300),
     [hospitals]
   );
 
-  // Handle input change
   const handleInputChange = (value) => {
     setFormData({ ...formData, hospitalName: value });
-    console.log("hospitals", hospitals);
     debouncedFilterHospitals(value);
   };
 
   return (
-    <div>
-      <label className="block text-sm font-medium mb-1">Hospital Name</label>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-          >
-            {formData.hospitalName || "Select hospital..."}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
-          <Command>
-            <CommandInput
-              placeholder="Search hospitals..."
-              value={formData.hospitalName}
-              onValueChange={handleInputChange}
-            />
-            <CommandList>
-              <CommandEmpty>No hospitals found.</CommandEmpty>
-              <CommandGroup>
-                {filteredHospitals.map((hospital) => (
-                  <CommandItem
-                    key={hospital}
-                    value={hospital}
-                    onSelect={(currentValue) => {
-                      setFormData({
-                        ...formData,
-                        hospitalName:
-                          currentValue === formData.hospitalName
-                            ? ""
-                            : currentValue,
-                      });
-                      setOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        formData.hospitalName === hospital
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    {hospital}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between px-6 py-4 h-[54px] bg-white text-gray-900 shadow-lg rounded-lg" // Added text-gray-900
+        >
+          <span className="truncate">
+            {formData.hospitalName || placeholder}
+          </span>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+        <Command>
+          <CommandInput
+            placeholder="Search hospitals..."
+            value={formData.hospitalName}
+            onValueChange={handleInputChange}
+            className="w-full"
+          />
+          <CommandList>
+            <CommandEmpty>No hospitals found.</CommandEmpty>
+            <CommandGroup>
+              {filteredHospitals.map((hospital) => (
+                <CommandItem
+                  key={hospital}
+                  value={hospital}
+                  onSelect={(currentValue) => {
+                    setFormData({
+                      ...formData,
+                      hospitalName:
+                        currentValue === formData.hospitalName
+                          ? ""
+                          : currentValue,
+                    });
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      formData.hospitalName === hospital
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                  {hospital}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }

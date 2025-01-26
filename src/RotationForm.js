@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Send, HelpCircle } from "lucide-react";
 import { submitRotationReview } from "./api/rotationApi";
 import { HospitalNameAutocomplete } from "./HospitalNameAutocomplete";
+import { StateAutocomplete } from "./StateAutocomplete";
+import { SpecialtyAutocomplete } from "./SpecialtiesAutocomplete";
+import { CityAutocomplete } from "./CityAutocomplete";
 
 const RotationForm = () => {
   const [formData, setFormData] = useState({
@@ -177,57 +180,11 @@ const RotationForm = () => {
           />
         </div> */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">City</label>
-            <input
-              type="text"
-              className="w-full px-4 py-2 rounded-lg border"
-              value={formData.city}
-              onChange={(e) =>
-                setFormData({ ...formData, city: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">State</label>
-            <input
-              type="text"
-              list="states"
-              className="w-full px-4 py-2 rounded-lg border"
-              value={formData.state}
-              onChange={(e) =>
-                setFormData({ ...formData, state: e.target.value })
-              }
-              required
-            />
-            <datalist id="states">
-              {states.map((state) => (
-                <option key={state} value={state} />
-              ))}
-            </datalist>
-          </div>
+          <CityAutocomplete formData={formData} setFormData={setFormData} />
+          <StateAutocomplete formData={formData} setFormData={setFormData} />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">Specialty</label>
-          <input
-            type="text"
-            list="specialties"
-            className="w-full px-4 py-2 rounded-lg border"
-            value={formData.specialty}
-            onChange={(e) =>
-              setFormData({ ...formData, specialty: e.target.value })
-            }
-            placeholder="Type to search specialties..."
-            required
-          />
-          <datalist id="specialties">
-            {specialties.map((specialty) => (
-              <option key={specialty} value={specialty} />
-            ))}
-          </datalist>
-        </div>
+        <SpecialtyAutocomplete formData={formData} setFormData={setFormData} />
 
         <div className="grid grid-cols-2 gap-4">
           <div>

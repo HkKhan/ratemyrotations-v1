@@ -1,0 +1,6 @@
+
+rotationsinfo.com
+     id    name    type     value                               created    
+           *       CNAME    cname.vercel-dns.com.               default    
+                   A        76.76.21.21                         default    
+                   CAA      0 issue "letsencrypt.org"           default    

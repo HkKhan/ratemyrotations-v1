@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Star, MapPin, Clock, BookOpen, Search } from "lucide-react";
+import {
+  Star,
+  MapPin,
+  Clock,
+  BookOpen,
+  Search,
+  ChevronDown,
+} from "lucide-react";
 import { Card } from "./components/ui/card";
-
+import SearchBar from "./SearchBar";
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const [results, setResults] = useState([]);
@@ -65,58 +72,6 @@ const SearchResults = () => {
       setLoading(false);
     }
   }, [specialty, hospitalName, city, state]);
-
-  // SearchBar component can be defined here or imported
-  const SearchBar = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [searchType, setSearchType] = useState("specialty");
-    const navigate = useNavigate();
-
-    const handleSearch = (e) => {
-      e.preventDefault();
-      if (searchQuery.trim()) {
-        // Create a query string based on the selected search type
-        const queryParams = new URLSearchParams();
-        queryParams.set(searchType, encodeURIComponent(searchQuery.trim()));
-        navigate(`/search?${queryParams.toString()}`);
-      }
-    };
-
-    return (
-      <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-8">
-        <div className="flex items-center">
-          {/* Search Type Dropdown */}
-          <select
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-            className="mr-2 px-3 py-4 rounded-lg text-gray-900 shadow-lg"
-          >
-            <option value="specialty">Specialty</option>
-            <option value="hospitalName">Hospital</option>
-            <option value="city">City</option>
-            <option value="state">State</option>
-          </select>
-
-          {/* Search Input */}
-          <div className="relative flex-grow">
-            <input
-              type="text"
-              className="w-full px-6 py-4 rounded-lg text-gray-900 shadow-lg"
-              placeholder={`Search by ${searchType}...`}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#CE7B91] p-2 rounded-lg hover:bg-[#B8D3D1] transition-colors"
-            >
-              <Search className="text-white" />
-            </button>
-          </div>
-        </div>
-      </form>
-    );
-  };
 
   return (
     <div className="max-w-6xl mx-auto p-6">

@@ -1,16 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Search, BookOpen, Users, Trophy } from "lucide-react";
 import RotationSearchTable from "./RotationSearchTable";
+import SearchBar from "./SearchBar";
 
 const LandingPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const tableRef = useRef(null);
-  const searchInputRef = useRef(null);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    tableRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <div className="min-h-screen">
@@ -42,23 +36,7 @@ const LandingPage = () => {
             informed decisions about your clinical rotations.
           </p>
 
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-            <div className="relative">
-              <input
-                type="text"
-                className="w-full px-6 py-4 rounded-lg text-gray-900 shadow-lg"
-                placeholder="Search by hospital, specialty, or location..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#CE7B91] p-2 rounded-lg hover:bg-[#B8D3D1] transition-colors"
-              >
-                <Search className="text-white" />
-              </button>
-            </div>
-          </form>
+          <SearchBar />
         </div>
       </div>
 
@@ -98,7 +76,7 @@ const LandingPage = () => {
       </div>
 
       <div ref={tableRef} className="pb-16">
-        <RotationSearchTable initialSearchTerm={searchQuery} />
+        <RotationSearchTable />
       </div>
     </div>
   );
