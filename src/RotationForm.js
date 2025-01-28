@@ -188,16 +188,44 @@ const RotationForm = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Start Date</label>
-            <input
-              type="month"
-              className="w-full px-4 py-2 rounded-lg border"
-              value={formData.startDate}
-              onChange={(e) =>
-                setFormData({ ...formData, startDate: e.target.value })
-              }
-              required
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Start Date
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="MM/YYYY"
+                value={formData.startDate}
+                onChange={(e) => {
+                  let value = e.target.value;
+
+                  // Only allow numbers and forward slash
+                  value = value.replace(/[^\d/]/g, "");
+
+                  // Auto-insert slash after MM if user types 2 digits
+                  if (value.length === 2 && !value.includes("/")) {
+                    value += "/";
+                  }
+
+                  // Limit total length to 7 characters (MM/YYYY)
+                  if (value.length <= 7) {
+                    setFormData({ ...formData, startDate: value });
+                  }
+                }}
+                onBlur={() => {
+                  // Validate format on blur
+                  const datePattern = /^(0[1-9]|1[0-2])\/\d{4}$/;
+                  if (
+                    !datePattern.test(formData.startDate) &&
+                    formData.startDate !== ""
+                  ) {
+                    alert("Please enter date in MM/YYYY format");
+                  }
+                }}
+                required
+              />
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">
