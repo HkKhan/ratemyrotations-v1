@@ -54,8 +54,8 @@ const LandingPage = () => {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-[#B8D3D1] bg-opacity-20 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Users className="text-[#B8D3D1]" size={24} />
+              <div className="bg-[#CE7B91] bg-opacity-20 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <Users className="text-[#CE7B91]" size={24} />
               </div>
               <h3 className="text-xl font-semibold mb-2">Student Community</h3>
               <p className="text-gray-600">
